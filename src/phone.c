@@ -6,11 +6,7 @@
 phone_contact_t* get_phone_contact_by_name(const char* name, phone_contact_t* contacts, int contact_count) {
     const int name_len = strlen(name);
     
-    ATIL_DEBUG("strlen: %d", name_len);
-    ATIL_DEBUG("contact count: %d", contact_count);
-
     for (int i = 0; i < contact_count; ++i) {
-        ATIL_TRACE("iteration %u", i);
         if (strncmp(contacts[i].name, name, name_len) == 0)
             return &contacts[i];
     }

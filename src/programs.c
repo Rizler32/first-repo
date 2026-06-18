@@ -90,52 +90,50 @@ int program_string_length() {
 }
 
 
-static inline void CREATE_CONTACT(phone_contact_t* contact) {
-    static int counter = 0;
-    *contact = {
-        .phone_number = 100 + counter,
-        .name         = "nome" + counter,
-        .surname      = "cognome" + counter
+#define CONTACT_COUNT 10
+
+static inline void _add_contact(phone_contact_t* contacts, int phone, const char* name, const char* surname) {
+    static int i = 0;
+    contacts[i++] = (phone_contact_t){
+        .phone_number = phone,
+        .name         = name,
+        .surname      = surname
     };
-    counter++;
 }
 
-    
+static inline void _search_contact(const char* name, phone_contact_t* contacts) {
+    phone_contact_t* found = get_phone_contact_by_name(name, contacts, CONTACT_COUNT);
+    if (found)
+        printf("the phone number of contact with name \"%s\" is %d\n", name, found->phone_number);
+    else
+        printf("no contact with the name \"%s\" was found\n", name);
+}
+
 int program_phone() {
-    const int contact_count = 10;
-    phone_contact_t* contacts = malloc(contact_count * sizeof(phone_contact_t));
+    phone_contact_t* contacts = malloc(CONTACT_COUNT * sizeof(phone_contact_t));
 
-    CREATE_CONTACT(0)
-    CREATE_CONTACT(1)
-    CREATE_CONTACT(2)
-    CREATE_CONTACT(3)
-    CREATE_CONTACT(4)
-    CREATE_CONTACT(5)
-    CREATE_CONTACT(6)
-    CREATE_CONTACT(7)
-    CREATE_CONTACT(7)
-    CREATE_CONTACT(8)
-    CREATE_CONTACT(10)
-
-    printf("contact 0's name: %d\n", contacts[0].phone_number);
-
-#define SEARCH_CONTACT(_name) {                                                                        \
-    const char* name = "nome"#_name;                                                            \
-    phone_contact_t* found = get_phone_contact_by_name(name, contacts, contact_count);          \
-    if (found)                                                                                  \
-        printf("il numero di telefono del contatto con nome \"%s\" è %d\n", name, found);       \
-    else                                                                                        \
-        printf("non è stato trovato alcun contatto con nome \"%s\"\n", name);                   \
-}
+#define ADD_CONTACT(i) _add_contact(contacts, 100+i, "name"#i, "surname"#i)
     
-    SEARCH_CONTACT(0)
-    SEARCH_CONTACT(1)
-    SEARCH_CONTACT(2)
-    SEARCH_CONTACT(3)
-    SEARCH_CONTACT(11) // non dovrebbe trovarlo
+    ADD_CONTACT(0);
+    ADD_CONTACT(1);
+    ADD_CONTACT(2);
+    ADD_CONTACT(3);
+    ADD_CONTACT(4);
+    ADD_CONTACT(5);
+    ADD_CONTACT(6);
+    ADD_CONTACT(7);
+    ADD_CONTACT(8);
+    ADD_CONTACT(9);
+    
+    printf("contact 0's name: %d\n", contacts[0].phone_number);
+    
+#define SEARCH_CONTACT(i) _search_contact("name"#i, contacts)
+
+    SEARCH_CONTACT(0);
+    SEARCH_CONTACT(1);
+    SEARCH_CONTACT(2);
+    SEARCH_CONTACT(3);
+    SEARCH_CONTACT(11); // non dovrebbe trovarlo
 
     free(contacts);
-    
-#undef CREATE_CONTACT
-#undef SEARCH_CONTACT
 }
