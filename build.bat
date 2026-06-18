@@ -16,7 +16,7 @@ set "includeDir=%~dp0include"
 set "srcDir=%~dp0src"
 set "libIncludeDir=C:/Dev/C++/lib/atil-1.0.0/include"
 set "libDir=C:/Dev/C++/lib/atil-1.0.0/bin"
-set "bindir=%~dp0..\bin"
+set "bindir=%~dp0bin"
 
 if not exist "%bindir%" mkdir "%bindir%"
 
